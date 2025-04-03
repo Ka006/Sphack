@@ -1,0 +1,4 @@
+name: str
+    weight: 8
+    volume: 7
+     
