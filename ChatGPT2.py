@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from typing import List, Optional
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -17,6 +18,12 @@ class Cargo(SQLModel, table=True):
     weight: float  # In kg
     volume: float  # In cubic meters
     fragile: bool = False  # Is the cargo fragile?
+
+# User Data Model
+class UserData(BaseModel):
+    name: str
+    age: int
+    email: str
 
 # Initialize database and seed sample data
 def init_db():
@@ -136,6 +143,13 @@ def format_response(optimized_cargo: List[Any], total_weight: float, total_volum
 @app.get("/")
 def read_root():
     return {"message": "Hello, World!"}
+
+# Endpoint to collect user data
+@app.post("/submit-data/")
+def collect_data(user_data: UserData):
+    # Log the received data to the terminal
+    print(f"Received data: {user_data}")
+    return {"status": "success", "received_data": user_data}
 
 # Run the FastAPI App
 if __name__ == "__main__":
